@@ -10,6 +10,7 @@ use macroquad::{
 };
 
 const CAMERA_SPEED: f32 = 1.0;
+const SUPER_CAMERA_SPEED: f32 = 10.0;
 
 pub struct CameraState {
     position: Vec3,
@@ -34,25 +35,31 @@ impl CameraState {
         //change position according to keyboard inputs
         let direction = self.direction();
 
+        //SPEEED
+        let speed = if is_key_down(KeyCode::LeftControl) {
+            SUPER_CAMERA_SPEED
+        } else {
+            CAMERA_SPEED
+        };
         //movement along look direction
         if is_key_down(KeyCode::W) {
-            self.position += direction * CAMERA_SPEED * dt;
+            self.position += direction * speed * dt;
         }
         if is_key_down(KeyCode::S) {
-            self.position -= direction * CAMERA_SPEED * dt;
+            self.position -= direction * speed * dt;
         }
         if is_key_down(KeyCode::D) {
-            self.position += direction.cross(Vec3::Z) * CAMERA_SPEED * dt;
+            self.position += direction.cross(Vec3::Z).normalize_or_zero() * speed * dt;
         }
         if is_key_down(KeyCode::A) {
-            self.position -= direction.cross(Vec3::Z) * CAMERA_SPEED * dt;
+            self.position -= direction.cross(Vec3::Z).normalize_or_zero() * speed * dt;
         }
         //movement along UP/DOWN
         if is_key_down(KeyCode::Space) {
-            self.position += Vec3::Z * CAMERA_SPEED * dt;
+            self.position += Vec3::Z * speed * dt;
         }
         if is_key_down(KeyCode::LeftShift) {
-            self.position -= Vec3::Z * CAMERA_SPEED * dt;
+            self.position -= Vec3::Z * speed * dt;
         }
 
         //change pitches and yaws
