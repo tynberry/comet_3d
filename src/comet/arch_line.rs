@@ -16,12 +16,12 @@ impl ArchLine {
 
         //generate completely random parameters
         for i in 0..sin_y.len() {
-            sin_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-            sin_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
+            sin_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.5_f32.powi(i as i32);
+            sin_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.5_f32.powi(i as i32);
         }
         for i in 0..cos_y.len() {
-            cos_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-            cos_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
+            cos_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.5_f32.powi(i as i32);
+            cos_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.5_f32.powi(i as i32);
         }
 
         //normalize cosines to start
