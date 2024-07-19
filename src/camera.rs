@@ -24,7 +24,7 @@ impl CameraState {
         Self {
             position: pos,
             pitch: 0.0,
-            yaw: 0.0,
+            yaw: PI,
 
             mouse_locked: false,
         }
@@ -82,6 +82,12 @@ impl CameraState {
                 show_mouse(false);
                 self.mouse_locked = true;
             }
+        }
+
+        //reset of angles
+        if is_key_pressed(KeyCode::F11) {
+            self.yaw = PI;
+            self.pitch = 0.0;
         }
     }
 
