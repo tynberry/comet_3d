@@ -1,66 +1,38 @@
+use std::f32::consts::PI;
+
 use macroquad::math::Vec3;
 
+fn gen_f32(min: f32, max: f32) -> f32 {
+    fastrand::f32() * (max - min) + min
+}
+
 pub struct ArchLine {
-    sin_y: [f32; 4],
-    cos_y: [f32; 4],
-    sin_z: [f32; 4],
-    cos_z: [f32; 4],
+    const_ang: f32,
+    lin_ang: f32,
+    sin_ang: f32,
+    cos_ang: f32,
+
+    lin_cone: f32,
 }
 
 impl ArchLine {
     pub fn generate() -> Self {
-        let mut sin_y = [0.0; 4];
-        let mut cos_y = [0.0; 4];
-        let mut sin_z = [0.0; 4];
-        let mut cos_z = [0.0; 4];
-
-        //generate completely random parameters
-        for i in 0..sin_y.len() {
-            sin_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-            sin_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-        }
-        for i in 0..cos_y.len() {
-            cos_y[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-            cos_z[i] = (fastrand::f32() * 2.0 - 1.0) * 0.8_f32.powi(i as i32);
-        }
-
-        //normalize cosines to start
-        let cos_y_sum = cos_y.iter().fold(0.0, |acc, a| acc + *a);
-        let cos_z_sum = cos_z.iter().fold(0.0, |acc, a| acc + *a);
-        cos_y[0] -= cos_y_sum;
-        cos_z[0] -= cos_z_sum;
-
         Self {
-            sin_y,
-            cos_y,
-            sin_z,
-            cos_z,
+            const_ang: gen_f32(0.0, 2.0 * PI),
+            lin_ang: gen_f32(-0.40, 0.40),
+            sin_ang: gen_f32(-0.5, 0.5),
+            cos_ang: gen_f32(-0.25, 0.25),
+            lin_cone: gen_f32(0.10, 0.12),
         }
     }
 
     pub fn sample(&self, t: f32) -> Vec3 {
-        //compute values
-        let mut sum_y = 0.0;
-        let mut sum_z = 0.0;
-
-        self.sin_y
-            .iter()
-            .zip(self.sin_z.iter())
-            .enumerate()
-            .for_each(|(ind, (sin_y, sin_z))| {
-                sum_y += (t * (ind as f32 + 1.0)).sin() * sin_y;
-                sum_z += (t * (ind as f32 + 1.0)).sin() * sin_z;
-            });
-
-        self.cos_y
-            .iter()
-            .zip(self.cos_z.iter())
-            .enumerate()
-            .for_each(|(ind, (sin_y, sin_z))| {
-                sum_y += (t * (ind as f32 + 1.0)).cos() * sin_y;
-                sum_z += (t * (ind as f32 + 1.0)).cos() * sin_z;
-            });
-
-        Vec3::new(t, sum_y, sum_z)
+        //compute cone size at distance
+        let cone_size = self.lin_cone * t;
+        //compute angle at distance
+        let angle =
+            self.const_ang + self.lin_ang * t + self.sin_ang * t.sin() + self.cos_ang * t.cos();
+        //compute the point itself
+        Vec3::new(t, angle.sin() * cone_size, angle.cos() * cone_size)
     }
 }
