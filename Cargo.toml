@@ -1,8 +1,0 @@
-[package]
-name = "comet-3d"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-fastrand = "2.1.0"
-macroquad = "0.4.11"
