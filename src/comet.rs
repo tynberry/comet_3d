@@ -46,7 +46,7 @@ impl CometState {
 
         //generate render lines
         //(render lines are sampled arch lines)
-        const SAMPLE_COUNT: usize = 1024;
+        const SAMPLE_COUNT: usize = 4096;
         const SAMPLE_DISTANCE: f32 = 0.05;
         const SCALE: f32 = 1.20;
 
